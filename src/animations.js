@@ -1,6 +1,7 @@
-// All scroll-driven animation on GSAP ScrollTrigger (BUG 4). Initial hidden
-// states live in CSS (.anim-hidden, anim.css) so nothing flashes (BUG 1) — GSAP
-// only reveals and clears the props.
+// All scroll-driven animation on GSAP ScrollTrigger. Initial hidden states live
+// in CSS (anim.css) so nothing flashes; GSAP reveals to the final inline values
+// and LEAVES them there (no clearProps — clearing reverts to the hidden CSS state
+// and re-blurs/re-hides the element).
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -11,34 +12,32 @@ const reveal = { duration: 0.9, ease: 'power3.out' };
 function heroIntro() {
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
   tl.to('.nav', { opacity: 1, y: 0, duration: 0.9 }, 0)
-    .to('.hero-copy h1', { opacity: 1, y: 0, duration: 1, clearProps: 'transform' }, 0.08)
-    .to('.hero-copy p', { opacity: 1, y: 0, duration: 0.9, clearProps: 'transform' }, 0.2)
-    .to('.hero-copy .cta', { opacity: 1, y: 0, duration: 0.9, clearProps: 'transform' }, 0.3)
-    .to('.instrument-tilt', { opacity: 1, y: 0, duration: 1.3, clearProps: 'transform' }, 0.25)
+    .to('.hero-copy h1', { opacity: 1, y: 0, duration: 1 }, 0.08)
+    .to('.hero-copy p', { opacity: 1, y: 0, duration: 0.9 }, 0.2)
+    .to('.hero-copy .cta', { opacity: 1, y: 0, duration: 0.9 }, 0.3)
+    .to('.instrument-tilt', { opacity: 1, y: 0, duration: 1.3 }, 0.25)
     .to('.hero-foot', { opacity: 1, y: 0, duration: 0.9 }, 0.5);
 }
 
 /* ---- generic blur/rise reveals on scroll ---- */
 function scrollReveals() {
-  // section eyebrows + headings + subheads
   ScrollTrigger.batch('.ctx-head .e-anim, .walk-head .e-anim, .brief-head .e-anim, .access-head .e-anim, .fit-head .e-anim', {
     start: 'top 85%',
-    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, filter: 'blur(0px)', stagger: 0.12, ...reveal, clearProps: 'filter,transform' }),
+    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, filter: 'blur(0px)', stagger: 0.12, ...reveal }),
   });
-  // captions, key rows, access columns, faq scenarios, final cta
   ScrollTrigger.batch('.cap, .ans-key, .acc-col, .scen, .fit-canvas, .strip-tick', {
     start: 'top 88%',
-    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, stagger: 0.1, ...reveal, clearProps: 'transform' }),
+    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, stagger: 0.1, ...reveal }),
   });
   gsap.utils.toArray('.fin > *').forEach((el) =>
-    gsap.to(el, { opacity: 1, y: 0, filter: 'blur(0px)', ...reveal, scrollTrigger: { trigger: el, start: 'top 90%' }, clearProps: 'filter,transform' }));
+    gsap.to(el, { opacity: 1, y: 0, filter: 'blur(0px)', ...reveal, scrollTrigger: { trigger: el, start: 'top 90%' } }));
 }
 
 /* ---- bridge thread grows ---- */
 function bridgeThread() {
   const thread = document.querySelector('.thread');
   if (!thread) return;
-  gsap.to(thread, { scaleY: 1, duration: 1.4, ease: 'power2.out', scrollTrigger: { trigger: '.bridge', start: 'top 85%' }, clearProps: 'transform' });
+  gsap.to(thread, { scaleY: 1, duration: 1.4, ease: 'power2.out', scrollTrigger: { trigger: '.bridge', start: 'top 85%' } });
 }
 
 /* ---- section 02: draw connectors, reveal noise, run the signal dot ---- */
@@ -46,15 +45,8 @@ function engine() {
   const wrap = document.querySelector('.engine-wrap');
   if (!wrap) return;
   const lines = gsap.utils.toArray('.a-line, .out-line');
-  gsap.to(lines, {
-    strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut', stagger: 0.08,
-    scrollTrigger: { trigger: wrap, start: 'top 75%' },
-  });
-  gsap.to('.noise-layer span', {
-    opacity: 0.22, duration: 0.8, stagger: 0.12,
-    scrollTrigger: { trigger: wrap, start: 'top 70%' },
-  });
-  // traveling signal dot (was SMIL) — runs only while section 02 is in view
+  gsap.to(lines, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut', stagger: 0.08, scrollTrigger: { trigger: wrap, start: 'top 75%' } });
+  gsap.to('.noise-layer span', { opacity: 0.22, duration: 0.8, stagger: 0.12, scrollTrigger: { trigger: wrap, start: 'top 70%' } });
   const dot = document.querySelector('.out-dot');
   if (dot) {
     gsap.set(dot, { attr: { cx: 724, cy: 280, opacity: 0.75 } });
@@ -67,7 +59,7 @@ function engine() {
 function proLine() {
   const line = document.querySelector('.pro-line');
   if (!line) return;
-  gsap.to(line, { scaleX: 1, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: '.access-surface', start: 'top 70%' }, clearProps: 'transform' });
+  gsap.to(line, { scaleX: 1, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: '.access-surface', start: 'top 70%' } });
 }
 
 /* ---- Pro statement: word-by-word reveal tied to scroll ---- */
@@ -91,10 +83,7 @@ function stripWords() {
     } else if (node.nodeType === 1) { node.classList.add('w'); words.push(node); }
   });
   if (!words.length) return;
-  gsap.to(words, {
-    opacity: 1, ease: 'none', stagger: { each: 0.5, ease: 'none' },
-    scrollTrigger: { trigger: p, start: 'top 92%', end: 'top 42%', scrub: true },
-  });
+  gsap.to(words, { opacity: 1, ease: 'none', stagger: { each: 0.5, ease: 'none' }, scrollTrigger: { trigger: p, start: 'top 92%', end: 'top 42%', scrub: true } });
 }
 
 /* ---- section 03: scenes crossfade by scroll (desktop) / stack (mobile) ---- */
@@ -124,7 +113,6 @@ function walkthrough() {
   });
   mm.add('(max-width: 980px)', () => { place(true); walk.dataset.active = 1; });
 
-  // clicking a rail chapter on desktop scrolls to its slice
   items.forEach((it, i) => it.addEventListener('click', () => {
     if (window.innerWidth < 981) return;
     const total = scroller.offsetHeight - window.innerHeight;
@@ -133,7 +121,7 @@ function walkthrough() {
   }));
 }
 
-/* ---- section 04: horizontal ribbon pan (BUG 2: smooth scrub, 1.5x travel) ---- */
+/* ---- section 04: horizontal ribbon pan (scrub, 1.5x travel, cached geometry) ---- */
 function ribbon() {
   const brief = document.querySelector('.brief');
   if (!brief) return;
@@ -147,12 +135,13 @@ function ribbon() {
 
   const mm = gsap.matchMedia();
   mm.add('(min-width: 981px)', () => {
-    let centers = [], trackLeft = 0, trackW = 0, maxX = 0, vw = 0;
+    // geometry measured once per refresh — NO per-frame layout reads (kills section-04 jank)
+    let centers = [], geom = [], trackLeft = 0, trackW = 0, maxX = 0, vw = 0;
     const measure = () => {
       vw = sticky.clientWidth;
-      // BUG 2: travel 1.5x further left than the natural content width
       maxX = Math.max(0, ribbonEl.scrollWidth - vw) * 1.5;
-      centers = zones.map((z) => z.offsetLeft + z.offsetWidth / 2);
+      geom = zones.map((z) => ({ left: z.offsetLeft, width: z.offsetWidth }));
+      centers = geom.map((g) => g.left + g.width / 2);
       trackLeft = centers[0];
       trackW = centers[centers.length - 1] - centers[0];
       track.style.left = trackLeft + 'px';
@@ -163,27 +152,26 @@ function ribbon() {
 
     const st = ScrollTrigger.create({
       trigger: scroller, start: 'top top', end: 'bottom bottom', scrub: true,
-      invalidateOnRefresh: true,
-      onRefresh: measure,
+      invalidateOnRefresh: true, onRefresh: measure,
       onUpdate: (self) => {
         const x = -self.progress * maxX;
         gsap.set(ribbonEl, { x });
         const center = -x + vw * 0.45;
         const lastIdx = zones.length - 1;
-        const endApproach = Math.min(1, Math.max(0, (vw - (zones[lastIdx].offsetLeft + x)) / zones[lastIdx].offsetWidth));
+        const endApproach = Math.min(1, Math.max(0, (vw - (geom[lastIdx].left + x)) / geom[lastIdx].width));
         const finale = endApproach >= 0.5;
         let ai = 0, best = Infinity;
-        centers.forEach((c, i) => { const d = Math.abs(c - center); if (d < best) { best = d; ai = i; } });
+        for (let i = 0; i < centers.length; i++) { const d = Math.abs(centers[i] - center); if (d < best) { best = d; ai = i; } }
         if (finale) ai = lastIdx;
         ribbonEl.classList.toggle('finale', finale);
-        zones.forEach((z, i) => {
-          const left = z.offsetLeft + x, right = left + z.offsetWidth;
+        for (let i = 0; i < zones.length; i++) {
+          const left = geom[i].left + x, right = left + geom[i].width;
           const vis = Math.min(right, vw) - Math.max(left, 0);
-          z.classList.toggle('on', i === ai || (!finale && vis / z.offsetWidth > 0.55));
-        });
+          zones[i].classList.toggle('on', i === ai || (!finale && vis / geom[i].width > 0.55));
+        }
         const camFill = Math.min(trackW, Math.max(0, center - trackLeft));
         const fw = camFill + (trackW - camFill) * Math.min(1, endApproach * 2);
-        stations.forEach((s, i) => s.classList.toggle('on', centers[i] - trackLeft <= fw + 1));
+        for (let i = 0; i < stations.length; i++) stations[i].classList.toggle('on', centers[i] - trackLeft <= fw + 1);
         fill.style.width = fw + 'px';
         brief.dataset.active = ai + 1;
       },
@@ -195,9 +183,8 @@ function ribbon() {
 
 export function initAnimations() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // reveal everything statically
     document.querySelectorAll('.anim-hidden, .reveal, .e-anim, .cap, .ans-key, .acc-col, .scen, .fit-canvas, .strip-tick, .fin > *, .thread, .noise-layer span, .pro-line')
-      .forEach((el) => { el.style.opacity = ''; el.style.transform = ''; });
+      .forEach((el) => { el.style.opacity = ''; el.style.transform = ''; el.style.filter = ''; });
     document.querySelectorAll('.zone').forEach((z) => z.classList.add('on'));
     return;
   }

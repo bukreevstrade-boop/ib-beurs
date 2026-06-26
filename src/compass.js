@@ -1,6 +1,9 @@
 // Market-navigation compass (radar). Generates the gauge SVG for tick precision,
 // then drives the needle drift on gsap.ticker and the hover tilt. No scroll listeners.
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function initCompass() {
   const svg = document.getElementById('instrument');
@@ -112,18 +115,25 @@ export function initCompass() {
     sparkDot.setAttribute('opacity', 0.85);
   }
 
-  /* needle drift + live azimuth — on gsap.ticker (no rAF/scroll listeners) */
+  /* needle drift + live azimuth.
+     The needle group carries a large gaussian-blur glow, so repainting it every
+     frame is expensive — gate it to when the hero is on screen and throttle to
+     ~30fps. This is the main scroll-lag fix. */
   const readout = document.getElementById('heading-readout');
-  let lastReadout = '';
+  const heroEl = document.querySelector('.hero');
+  let lastReadout = '', heroVisible = true, lastT = 0;
   const tickFn = () => {
-    if (reduced.matches) return;
+    if (reduced.matches || !heroVisible) return;
     const t = gsap.ticker.time;
+    if (t - lastT < 0.033) return;   // cap at ~30fps; the drift is slow, this is imperceptible
+    lastT = t;
     const d = 3.1 * Math.sin(t * 0.21) + 1.5 * Math.sin(t * 0.057 + 1.7);
     needle.setAttribute('transform', 'rotate(' + d.toFixed(2) + ' ' + CX + ' ' + CY + ')');
     const s = (heading(A) + d).toFixed(1) + '°';
     if (readout && s !== lastReadout) { readout.textContent = s; lastReadout = s; }
   };
   gsap.ticker.add(tickFn);
+  if (heroEl) ScrollTrigger.create({ trigger: heroEl, start: 'top bottom', end: 'bottom top', onToggle: (s) => { heroVisible = s.isActive; } });
   if (readout) readout.textContent = heading(A).toFixed(1) + '°';
 
   /* hover tilt — cached rect, gsap-eased (pointer:fine only; not a scroll listener) */
