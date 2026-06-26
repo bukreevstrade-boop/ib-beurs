@@ -114,6 +114,14 @@
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 10px 1px color-mix(in oklab, var(--accent) 70%, transparent);
+  animation: pipPulse 1.6s ease-in-out infinite;
+}
+@keyframes pipPulse {
+  0%, 100% { opacity: 1;   box-shadow: 0 0 7px 0px color-mix(in oklab, var(--accent) 55%, transparent); }
+  50%      { opacity: .5;  box-shadow: 0 0 16px 4px color-mix(in oklab, var(--accent) 90%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta .pip { animation: none; }
 }
 
 /* ---- instrument (radar compass) — ORIGINAL: rises full-bleed from the bottom ---- */

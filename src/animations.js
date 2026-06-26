@@ -172,8 +172,9 @@ function ribbon() {
           const vis = Math.min(right, vw) - Math.max(left, 0);
           zones[i].classList.toggle('on', i === ai || (!finale && vis / geom[i].width > 0.55));
         }
-        const camFill = Math.min(trackW, Math.max(0, center - trackLeft));
-        const fw = camFill + (trackW - camFill) * Math.min(1, endApproach * 2);
+        // fill the signal line linearly with scroll progress — reaches the end
+        // exactly at the end (no early-completion acceleration).
+        const fw = trackW * self.progress;
         for (let i = 0; i < stations.length; i++) stations[i].classList.toggle('on', centers[i] - trackLeft <= fw + 1);
         fill.style.width = fw + 'px';
         brief.dataset.active = ai + 1;
