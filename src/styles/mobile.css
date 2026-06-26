@@ -182,7 +182,8 @@
     .nav-cta .nc-full { display: none; }
     .nav-cta .nc-short { display: inline; }
     .hero-copy { padding: 0 24px; }
-    .hero-copy h1 { font-size: clamp(38px, 10.6vw, 50px); line-height: 1.07; }
+    /* h1 size is governed by the single base clamp() — no media-query override */
+    .hero-copy h1 { line-height: 1.08; }
     .hero-copy h1 .hl { text-decoration-thickness: 2px; text-underline-offset: 7px; }
     .hero-copy p { margin-top: 18px; font-size: 16.5px; max-width: 34ch; }
     .cta { margin-top: 30px; padding: 16px 32px; font-size: 15.5px; }
@@ -327,7 +328,6 @@
     .nav, .hero-copy, .hero-foot, .ctx-wrap, .walk-head, .brief-head,
     .access-wrap, .fit-wrap, .fin, .foot-wrap { padding-left: 20px; padding-right: 20px; }
     .walk-grid, .ribbon { padding-left: 20px; padding-right: 20px; }
-    .hero-copy h1 { font-size: clamp(33px, 10.4vw, 38px); }
     .engine-mobile { padding: 30px 20px 22px; }
     .rail-item .scene { padding: 24px 16px; }
     .zone, .zone[data-z="2"], .zone[data-z="3"], .zone[data-z="4"] { padding: 24px 16px 20px; }
