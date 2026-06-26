@@ -240,7 +240,9 @@ function setupMobileCompass(host) {
   const needle = buildRoundCompass(host);
   const hint = document.createElement('div');
   hint.className = 'compass-hint';
-  hint.textContent = 'Наклоните телефон';
+  // iOS needs a tap to grant motion access first; Android just needs a tilt
+  hint.textContent = (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function')
+    ? 'Коснитесь и наклоните' : 'Наклоните телефон';
   host.appendChild(hint);
 
   // the SVG is built on every size (CSS reveals it on phones); orientation +
