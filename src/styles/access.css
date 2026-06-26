@@ -1,0 +1,328 @@
+/* IB·BEURS — section 05 "Access Levels" */
+.access { background: var(--bg); transition: background-color .4s ease; padding: 40px 0 170px; }
+.access-wrap { max-width: 1576px; margin: 0 auto; padding: 0 48px; }
+.access-head h2 {
+  margin-top: 24px;
+  font-family: "Inter Tight", "Inter", sans-serif;
+  font-weight: 600;
+  font-size: clamp(36px, 3.8vw, 62px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.access-sub {
+  margin-top: 20px;
+  max-width: 560px;
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+/* ---- shared access surface ---- */
+.access-surface {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.22fr 1.08fr;
+  margin-top: 110px;
+  background: #faf9f6;
+  border-radius: 32px;
+  box-shadow:
+    0 40px 90px -48px rgba(20,22,24,.25),
+    0 2px 6px rgba(20,22,24,.04);
+}
+.acc-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 44px 42px 46px;
+  min-width: 0;
+}
+.acc-col + .acc-col { border-left: 1px solid rgba(22,24,26,.06); }
+
+/* depth-of-access indicator */
+.lv {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #9a9d9a;
+}
+.lv-bars { display: flex; gap: 4px; }
+.lv-bars i {
+  width: 14px; height: 3px;
+  border-radius: 2px;
+  background: rgba(22,24,26,.1);
+}
+.lv-bars i.f { background: rgba(22,24,26,.45); }
+.lv-bars i.g { background: var(--accent); }
+
+.acc-name {
+  margin-top: 18px;
+  font-family: "Inter Tight", "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: -0.015em;
+}
+.acc-pos { margin-top: 4px; font-size: 13.5px; color: var(--ink-soft); }
+.acc-price {
+  margin-top: 18px;
+  font-family: "Inter Tight", "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 34px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.acc-price .per { font-size: 15px; font-weight: 400; color: var(--ink-soft); letter-spacing: 0; }
+
+/* ---- feature groups: progressive disclosure ---- */
+.feats { margin-top: 30px; }
+.feats-cap {
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #9a9d9a;
+  font-weight: 500;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(22,24,26,.08);
+}
+.fg { border-bottom: 1px solid rgba(22,24,26,.06); }
+.fg summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 13px 0;
+  font-size: 14px;
+}
+.fg summary::-webkit-details-marker { display: none; }
+.fg summary .nm { font-weight: 500; flex: 1; }
+.fg summary .hint { font-size: 12px; color: #9a9d9a; white-space: nowrap; }
+.fg summary::after {
+  content: "+";
+  font-size: 15px;
+  color: #9a9d9a;
+  line-height: 1;
+  transition: transform .3s ease;
+}
+.fg[open] summary::after { content: "−"; }
+.fg ul { list-style: none; margin: 0; padding: 0 0 14px; }
+.fg li {
+  position: relative;
+  padding: 4px 0 4px 18px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+.fg li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: .92em;
+  width: 9px; height: 1.5px;
+  background: rgba(22,24,26,.25);
+}
+.all-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(22,24,26,.06);
+  font-size: 14px;
+  font-weight: 500;
+}
+.all-row .pip {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px color-mix(in oklab, var(--accent) 55%, transparent);
+  flex: none;
+}
+
+/* locked layers (Free) */
+.locked { margin-top: 26px; }
+.locked-cap {
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #b3b6b3;
+  font-weight: 500;
+  padding-bottom: 10px;
+}
+.locked-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 13.5px;
+  color: #a3a6a3;
+  transition: color .3s ease;
+}
+.locked-row::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid #c9ccc9;
+  flex: none;
+}
+.acc-col:hover .locked-row { color: #b3b6b3; }
+
+/* ---- Pro: the dominant access layer ---- */
+.acc-col--pro {
+  z-index: 1;
+  margin: -56px -6px -34px;
+  padding: 52px 48px 50px;
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow:
+    0 50px 110px -44px rgba(20,22,24,.38),
+    0 2px 8px rgba(20,22,24,.05);
+}
+.acc-col--pro + .acc-col { border-left: none; }
+.pro-line {
+  position: absolute;
+  top: 0; left: 48px; right: 48px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform-origin: left center;
+}
+.access.in .pro-line { animation: proDraw 1.2s cubic-bezier(.2,.7,.2,1) backwards .9s; }
+.access.done .pro-line { animation: none; }
+@keyframes proDraw { from { transform: scaleX(0); } }
+.acc-tag {
+  position: absolute;
+  top: 26px; right: 48px;
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+.acc-col--pro .acc-name { font-size: 30px; }
+.acc-col--pro .acc-price { font-size: 42px; }
+
+/* CTAs — pinned to the bottom edge of the access column */
+.acc-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: auto;
+  width: 100%;
+  padding: 16px 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
+}
+.acc-col--pro .feats { margin-bottom: 32px; }
+.lessons { margin-bottom: 32px; }
+.acc-cta--pro {
+  background: var(--ink);
+  color: #f5f5f2;
+  box-shadow: 0 14px 36px -16px rgba(20,22,24,.5);
+}
+.acc-cta--pro:hover { transform: translateY(-2px); box-shadow: 0 20px 44px -16px rgba(20,22,24,.55); }
+.acc-cta--pro .pip {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px 1px color-mix(in oklab, var(--accent) 70%, transparent);
+}
+.acc-cta--soft {
+  background: rgba(22,24,26,.06);
+  color: var(--ink);
+}
+.acc-cta--soft:hover { background: rgba(22,24,26,.1); }
+
+/* ---- education: lesson path ---- */
+.course-cap {
+  margin-top: 26px;
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #9a9d9a;
+  font-weight: 500;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(22,24,26,.08);
+}
+.lessons {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  position: relative;
+}
+.lessons::before {
+  content: "";
+  position: absolute;
+  left: 9px; top: 12px; bottom: 12px;
+  width: 1px;
+  background: rgba(22,24,26,.1);
+}
+.lessons li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 5.5px 0 5.5px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.lessons .n {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 19px;
+  text-align: center;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: #9a9d9a;
+  background: #faf9f6;
+  padding: 2px 0;
+}
+.lessons li:last-child { color: var(--ink); font-weight: 500; }
+.lessons li:last-child .n {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---- entrance ---- */
+.access-head.in .e-anim {
+  animation: focusIn 1.3s cubic-bezier(.2,.7,.2,1) backwards;
+  animation-delay: calc(var(--i, 0) * .16s);
+}
+.access.in .acc-col {
+  animation: ctxFade 1s cubic-bezier(.2,.7,.2,1) backwards;
+  animation-delay: calc(.2s + var(--i, 0) * .18s);
+}
+.access.done .acc-col { animation: none; }
+body.motion-off .access .e-anim,
+body.motion-off .access .acc-col,
+body.motion-off .pro-line { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .access .e-anim, .access .acc-col, .pro-line { animation: none !important; }
+}
+
+@media (max-width: 1180px) {
+  .acc-col { padding: 36px 30px 38px; }
+  .acc-col--pro { padding: 44px 34px 42px; }
+}
+@media (max-width: 980px) {
+  .access-wrap { padding: 0 28px; }
+  .access-surface {
+    grid-template-columns: 1fr;
+    margin-top: 64px;
+  }
+  .acc-col + .acc-col { border-left: none; border-top: 1px solid rgba(22,24,26,.06); }
+  .acc-col--pro {
+    margin: 0 -10px;
+    border-top: none;
+  }
+  .acc-col--pro + .acc-col { border-top: none; }
+  .access { padding-bottom: 100px; }
+}

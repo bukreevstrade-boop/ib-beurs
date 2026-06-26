@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>IB · BEURS — Навигация по финансовым рынкам</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600&display=swap" rel="stylesheet" />
+<!-- BUG 1: set the js flag before first paint so CSS can hide animated elements with no flash -->
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<section class="hero">
+  <nav class="nav reveal">
+    <a class="brand" href="#">IB <span class="dot">·</span> BEURS</a>
+    <div class="nav-links">
+      <a href="#tariffs">Тарифы</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Связаться с нами</a>
+    </div>
+    <div class="nav-right">
+      <a class="lang" href="#">EN</a>
+      <a class="nav-cta" href="#tariffs"><span class="nc-full">Полный доступ к платформе</span><span class="nc-short">Доступ</span></a>
+    </div>
+  </nav>
+
+  <div class="hero-copy">
+    <h1 class="reveal d1">Навигация по финансовым рынкам через <span class="hl">межрыночный анализ</span></h1>
+    <p class="reveal d2">Первоклассные данные, новости, аналитика для анализа всех классов активов — на одной платформе.</p>
+    <a class="cta reveal d3" href="#"><span class="pip"></span>Получить полный доступ</a>
+  </div>
+
+  <div class="instrument-tilt reveal d4">
+    <svg id="instrument" viewBox="0 0 1400 760" aria-hidden="true">
+      <defs>
+        <radialGradient id="discGrad" cx="0.5" cy="0.1" r="1.05">
+          <stop offset="0" stop-color="#2e3234"></stop>
+          <stop offset="0.55" stop-color="#1e2123"></stop>
+          <stop offset="1" stop-color="#141617"></stop>
+        </radialGradient>
+        <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" style="stop-color: var(--accent)" stop-opacity="0"></stop>
+          <stop offset="1" style="stop-color: var(--accent)" stop-opacity="0.85"></stop>
+        </linearGradient>
+        <filter id="f-soft" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="26"></feGaussianBlur>
+        </filter>
+        <filter id="f-halo" x="-200%" y="-200%" width="500%" height="500%">
+          <feGaussianBlur stdDeviation="8"></feGaussianBlur>
+        </filter>
+        <filter id="f-glow" x="-200%" y="-200%" width="500%" height="500%">
+          <feGaussianBlur stdDeviation="30"></feGaussianBlur>
+        </filter>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="hero-foot">
+    <div class="contacts">
+      <a href="mailto:ibb@ib-beurs.com">ibb@ib-beurs.com</a><span class="sep">·</span><a href="#">Telegram</a>
+    </div>
+    <div class="readout">
+      <span class="tag">DXY</span>
+      <span id="heading-readout">24.0°</span>
+    </div>
+  </div>
+</section>
+
+<section class="bridge">
+  <div class="thread"></div>
+</section>
+
+<section class="ctx">
+  <div class="ctx-wrap">
+    <header class="ctx-head">
+      <div class="eyebrow e-anim" style="--i: 0;"><span class="tick"></span>02 · Market Context Engine</div>
+      <h2 class="e-anim" style="--i: 1;">Создано инвесторами, для&nbsp;инвесторов.</h2>
+    </header>
+
+    <div class="engine-wrap">
+      <div class="engine-canvas">
+        <svg id="engine-svg" viewBox="0 0 1480 560" aria-hidden="true"></svg>
+        <div class="asset-labels">
+          <span class="asset-label" data-y="100" style="top: 100px;">Акции</span>
+          <span class="asset-label" data-y="190" style="top: 190px;">Облигации</span>
+          <span class="asset-label" data-y="280" style="top: 280px;">Валюты</span>
+          <span class="asset-label" data-y="370" style="top: 370px;">Товары</span>
+          <span class="asset-label" data-y="460" style="top: 460px;">Крипто</span>
+        </div>
+        <div class="noise-layer" aria-hidden="true">
+          <span style="left: 430px; top: 112px; --i: 0;">новости</span>
+          <span style="left: 556px; top: 164px; --i: 1;">соцсети</span>
+          <span style="left: 446px; top: 216px; --i: 2;">эк. календарь</span>
+          <span style="left: 540px; top: 330px; --i: 3;">COT-отчёты</span>
+          <span style="left: 436px; top: 390px; --i: 4;">макро-релизы</span>
+          <span style="left: 588px; top: 442px; --i: 5;">шум</span>
+        </div>
+        <div class="filter-bar" aria-hidden="true"></div>
+        <aside class="ctx-panel">
+          <div class="cp-head"><span class="cp-dot"></span>Рыночный контекст</div>
+          <svg class="cp-spark" viewBox="0 0 396 130" aria-hidden="true">
+            <defs>
+              <filter id="cp-glow" x="-150%" y="-150%" width="400%" height="400%">
+                <feGaussianBlur stdDeviation="10"></feGaussianBlur>
+              </filter>
+            </defs>
+            <path d="M 8 100 C 50 88, 80 106, 120 76 C 160 48, 200 66, 240 52" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="1.5"></path>
+            <path d="M 240 52 C 276 46, 322 40, 360 38 L 396 38" fill="none" stroke-width="1.8" stroke-linecap="round" style="stroke: var(--accent);"></path>
+            <circle cx="392" cy="38" r="16" filter="url(#cp-glow)" class="breathe" style="fill: var(--accent);"></circle>
+            <circle cx="392" cy="38" r="3.5" style="fill: var(--accent);"></circle>
+          </svg>
+          <div class="cp-rows">
+            <div class="cp-row"><span class="cp-label">Риск</span><span class="cp-track"><i class="cp-marker" style="left: 32%;"></i></span></div>
+            <div class="cp-row"><span class="cp-label">Цикл</span><span class="cp-track"><i class="cp-marker" style="left: 58%;"></i></span></div>
+            <div class="cp-row"><span class="cp-label">Возможность</span><span class="cp-track"><i class="cp-marker is-active" style="left: 78%;"></i></span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- vertical Market Context Engine for mobile / tablet -->
+    <div class="engine-mobile" aria-hidden="true">
+      <div class="em-assets">
+        <span>Акции</span><span>Облигации</span><span>Валюты</span><span>Товары</span><span>Крипто</span>
+      </div>
+      <svg class="em-converge" viewBox="0 0 320 84">
+        <path d="M 28 6 C 28 44, 160 40, 160 78"></path>
+        <path d="M 94 6 C 94 40, 160 44, 160 78"></path>
+        <path d="M 160 6 L 160 78"></path>
+        <path d="M 226 6 C 226 40, 160 44, 160 78"></path>
+        <path d="M 292 6 C 292 44, 160 40, 160 78"></path>
+      </svg>
+      <div class="em-noise">новости · соцсети · эк. календарь · COT-отчёты · шум</div>
+      <div class="em-filter"></div>
+      <svg class="em-out" viewBox="0 0 12 56">
+        <line x1="6" y1="0" x2="6" y2="46"></line>
+        <circle cx="6" cy="50" r="4"></circle>
+      </svg>
+      <div class="em-panel">
+        <div class="cp-head"><span class="cp-dot"></span>Рыночный контекст</div>
+        <svg class="cp-spark" viewBox="0 0 396 130" aria-hidden="true">
+          <defs>
+            <filter id="cp-glow-m" x="-150%" y="-150%" width="400%" height="400%">
+              <feGaussianBlur stdDeviation="10"></feGaussianBlur>
+            </filter>
+          </defs>
+          <path d="M 8 100 C 50 88, 80 106, 120 76 C 160 48, 200 66, 240 52" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="1.5"></path>
+          <path d="M 240 52 C 276 46, 322 40, 360 38 L 396 38" fill="none" stroke-width="1.8" stroke-linecap="round" style="stroke: var(--accent);"></path>
+          <circle cx="392" cy="38" r="16" filter="url(#cp-glow-m)" class="breathe" style="fill: var(--accent);"></circle>
+          <circle cx="392" cy="38" r="3.5" style="fill: var(--accent);"></circle>
+        </svg>
+        <div class="cp-rows">
+          <div class="cp-row"><span class="cp-label">Риск</span><span class="cp-track"><i class="cp-marker" style="left: 32%;"></i></span></div>
+          <div class="cp-row"><span class="cp-label">Цикл</span><span class="cp-track"><i class="cp-marker" style="left: 58%;"></i></span></div>
+          <div class="cp-row"><span class="cp-label">Возможность</span><span class="cp-track"><i class="cp-marker is-active" style="left: 78%;"></i></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="captions">
+      <div class="cap" style="--i: 0;">
+        <div class="cap-num">01</div>
+        <h3>Видеть больше за меньшее время</h3>
+        <p>5 классов активов: акции, облигации, валюты, товары и криптовалюта</p>
+      </div>
+      <div class="cap" style="--i: 1;">
+        <div class="cap-num">02</div>
+        <h3>Упростить ваш день</h3>
+        <p>Работайте с уже отфильтрованными новостями, календарём и направлением институционалов — без шума и лишних источников.</p>
+      </div>
+      <div class="cap" style="--i: 2;">
+        <div class="cap-num">03</div>
+        <h3>Новый формат аналитики</h3>
+        <p>Платформа собирает информацию по всем активам, учитывая цикличность и макро. На выходе — готовый контекст для торговли.</p>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div class="strip-tick"></div>
+      <p>Подписка <span class="pro">Pro</span> даёт инструменты для системного анализа рынка — те же, что используют профессиональные управляющие, в&nbsp;одном интерфейсе</p>
+    </div>
+  </div>
+</section>
+
+<section class="walk" data-active="1">
+  <header class="walk-head">
+    <div class="eyebrow e-anim" style="--i: 0;"><span class="tick"></span>03 · Внутри платформы</div>
+    <h2 class="e-anim" style="--i: 1;">Что на самом деле увидите после регистрации</h2>
+  </header>
+  <div class="walk-scroll">
+    <div class="walk-sticky">
+      <div class="walk-grid">
+        <div class="rail">
+          <div class="rail-item">
+            <div class="ri-eyebrow">Макро · сверху вниз</div>
+            <div class="ri-title">Положение стран в большом цикле</div>
+            <div class="ri-desc">Всему своё время: правильно определённая стадия цикла подсказывает выигрышную категорию активов для сделки — и помогает сохранить портфель перед большим кризисом.</div>
+            <div class="ri-bullets"><ul>
+              <li>Колесо большого цикла Далио для каждой страны</li>
+              <li>Внутренний порядок: управление, стабильность, институты, неравенство</li>
+              <li>Внешний порядок: гео-риск, резервная валюта, сырьевая зависимость</li>
+            </ul></div>
+          </div>
+          <div class="rail-item">
+            <div class="ri-eyebrow">Валюты · кэрри</div>
+            <div class="ri-title">Carry-screener. 20+ валютных пар, отсортированных по доходности</div>
+            <div class="ri-desc">Разница в процентных ставках открывает возможности как для фьючерсных сделок, так и для покупки более выгодных облигаций.</div>
+            <div class="ri-bullets"><ul>
+              <li>Спред: номинальный, реальный и с поправкой на инфляцию — по каждой паре</li>
+              <li>Тренд за 30 дней + волатильность за тот же период</li>
+              <li>Сигнал: положительный, нейтральный или отрицательный кэрри</li>
+            </ul></div>
+          </div>
+          <div class="rail-item">
+            <div class="ri-eyebrow">Товары</div>
+            <div class="ri-title">4 сектора, более 30 инструментов — в одной таблице</div>
+            <div class="ri-desc">Цены на товары растут циклично: от защитных металлов до агрокультур. Следи за запасами и крупными покупками</div>
+            <div class="ri-bullets"><ul>
+              <li>Отдельные разделы по энергоносителям, драгметаллам, промметаллам и агросектору</li>
+              <li>Запасы: дефицит, норма или избыток — за выбранный период</li>
+            </ul></div>
+          </div>
+          <div class="rail-item">
+            <div class="ri-eyebrow">Умные деньги</div>
+            <div class="ri-title">COT-трекер — по товарам, индексам и крипте</div>
+            <div class="ri-desc">Присутствие крупного игрока на рынке — дополнительный аргумент для позиции. Индикатор, предшествующий развороту цены.</div>
+            <div class="ri-bullets"><ul>
+              <li>Позиции управляющих фондов, обновляемые еженедельно</li>
+              <li>Изменения направления с историей за последний год</li>
+            </ul></div>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="scene" data-s="1">
+            <div class="sc-head"><span class="sc-title">Макро-цикл · страны</span><span class="sc-note">внутренний и внешний порядок</span></div>
+            <div class="cycle">
+              <div id="cycle-wheel"></div>
+              <div class="orders">
+                <div class="ord-group">
+                  <div class="ord-title">Внутренний порядок</div>
+                  <div class="ord-row"><span class="ord-label">Управление</span><span class="ord-track"><i class="ord-dot" style="left: 62%;"></i></span></div>
+                  <div class="ord-row"><span class="ord-label">Стабильность</span><span class="ord-track"><i class="ord-dot" style="left: 48%;"></i></span></div>
+                  <div class="ord-row"><span class="ord-label">Институты</span><span class="ord-track"><i class="ord-dot" style="left: 71%;"></i></span></div>
+                  <div class="ord-row"><span class="ord-label">Неравенство</span><span class="ord-track"><i class="ord-dot" style="left: 35%;"></i></span></div>
+                </div>
+                <div class="ord-group">
+                  <div class="ord-title">Внешний порядок</div>
+                  <div class="ord-row"><span class="ord-label">Гео-риск</span><span class="ord-track"><i class="ord-dot" style="left: 58%;"></i></span></div>
+                  <div class="ord-row"><span class="ord-label">Резервная валюта</span><span class="ord-track"><i class="ord-dot" style="left: 76%;"></i></span></div>
+                  <div class="ord-row"><span class="ord-label">Сырьевая зависимость</span><span class="ord-track"><i class="ord-dot" style="left: 41%;"></i></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="scene" data-s="2">
+            <div class="sc-head"><span class="sc-title">Carry-screener</span><span class="sc-note">20+ пар · сортировка по доходности</span></div>
+            <div id="carry-table"></div>
+          </div>
+
+          <div class="scene" data-s="3">
+            <div class="sc-head"><span class="sc-title">Товары · запасы</span><span class="sc-note">4 сектора · 30+ инструментов</span></div>
+            <div id="commod-table"></div>
+          </div>
+
+          <div class="scene scene--dark" data-s="4">
+            <div class="sc-head">
+              <span class="sc-title">COT · умные деньги</span>
+              <span class="cot-tabs"><span class="cot-tab on">Золото</span><span class="cot-tab">Nasdaq</span><span class="cot-tab">BTC</span></span>
+            </div>
+            <div class="cot-h">Нетто-позиции управляющих фондов</div>
+            <div id="cot-chart"></div>
+            <div class="cot-foot"><span>Обновление · еженедельно</span><span>История · 12 мес</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="brief" data-active="1">
+  <header class="brief-head">
+    <div class="eyebrow e-anim" style="--i: 0;"><span class="tick"></span>04 · Начало дня</div>
+    <h2 class="e-anim" style="--i: 1;">Мы предоставляем контекст для инвестиционного решения</h2>
+    <p class="brief-sub e-anim" style="--i: 2;">Функционал платформы отвечает на вопросы, которые трейдер задаёт себе перед открытием позиции</p>
+  </header>
+  <div class="ribbon-scroll">
+    <div class="ribbon-sticky">
+      <div class="ribbon">
+        <div class="track" aria-hidden="true"><i class="track-fill"></i></div>
+
+        <article class="zone on" data-z="1">
+          <header class="z-head">
+            <div class="z-meta"><span class="z-num">01</span><span class="z-q">Что изменилось за ночь?</span></div>
+            <h3 class="z-title">Обзор рынка каждое утро</h3>
+            <p class="z-desc">Узнай за минуту, что изменилось в рынке за сутки и на чём сегодня держать фокус</p>
+          </header>
+          <div class="z-body">
+            <div class="movers" id="movers"></div>
+            <div class="ev-block" id="events"></div>
+          </div>
+          <footer class="z-foot">
+            <ul class="st-points">
+              <li><strong>Лидеры и аутсайдеры</strong> — Что изменилось за ночь?</li>
+              <li><strong>Важные события</strong> — Акценты на крупные движения рынка</li>
+            </ul>
+            <a class="st-cta" href="#">Подробнее</a>
+          </footer>
+        </article>
+
+        <article class="zone" data-z="2">
+          <header class="z-head">
+            <div class="z-meta"><span class="z-num">02</span><span class="z-q">Какие события двигают рынок сегодня?</span></div>
+            <h3 class="z-title">Экономический календарь</h3>
+            <p class="z-desc">Заседания Центральных Банков, ключевые публикации, отчётности компаний, дивиденды и погашения облигационных купонов — в одном интерфейсе</p>
+          </header>
+          <div class="z-body">
+            <div class="cal-tabs">
+              <span class="cal-tab on">ЦБ</span><span class="cal-tab">Отчётности</span><span class="cal-tab">Облигации</span><span class="cal-tab">Дивиденды</span>
+            </div>
+            <div id="cal-rows"></div>
+          </div>
+          <footer class="z-foot">
+            <ul class="st-points">
+              <li><strong>Один интерфейс</strong> — ставки, публикации, купоны и дивиденды в общей ленте дня</li>
+            </ul>
+            <a class="st-cta" href="#">Подробнее →</a>
+          </footer>
+        </article>
+
+        <article class="zone" data-z="3">
+          <header class="z-head">
+            <div class="z-meta"><span class="z-num">03</span><span class="z-q">Как это влияет на мой портфель?</span></div>
+            <h3 class="z-title">Введение в принципы диверсификации</h3>
+            <p class="z-desc">Платформа поможет разобрать портфель на предмет коррелирующих активов, предложит варианты диверсификации по риск-профилю и рассчитает текущую доходность</p>
+          </header>
+          <div class="z-body">
+            <div class="alloc" id="alloc"></div>
+            <div class="pf-rows">
+              <div class="pf-row"><span class="k">Корреляция</span><span class="v">Акции ↔ Крипто · 0.78 — высокая, концентрация риска</span></div>
+              <div class="pf-row"><span class="k">Диверсификация</span><span class="v">3 варианта под ваш риск-профиль</span></div>
+              <div class="pf-row"><span class="k">Доходность</span><span class="v"><span class="accent">+12.4%</span> с начала года</span></div>
+            </div>
+          </div>
+          <footer class="z-foot">
+            <ul class="st-points">
+              <li><strong>Мгновенный импорт</strong> — Из Excel или подключение API брокера (TBD)</li>
+            </ul>
+            <a class="st-cta" href="#">Подробнее</a>
+          </footer>
+        </article>
+
+        <article class="zone zone--dark" data-z="4">
+          <header class="z-head">
+            <div class="z-meta"><span class="z-num">04</span><span class="z-q">Как активы связаны между собой?</span></div>
+            <h3 class="z-title">Корреляции и причинно-следственные связи</h3>
+            <p class="z-desc">Рассчитанные корреляции внутри и между классами активов. Цикличность рынков и их внутреннее взаимодействие</p>
+          </header>
+          <div class="z-body">
+            <div class="corr">
+              <div class="matrix" id="matrix"></div>
+              <div>
+                <div class="flow-title">Движение капитала</div>
+                <div id="flow"></div>
+                <div class="flow-note">Активный переток: <span class="a">Акции → Товары</span> · соответствует текущей фазе цикла</div>
+              </div>
+            </div>
+          </div>
+          <footer class="z-foot">
+            <ul class="st-points">
+              <li><strong>Корреляционные матрицы</strong> — В каждой категории активов</li>
+              <li><strong>Движение капитала</strong> — Как деньги перетекают из категории в категорию и при чём тут фаза цикла</li>
+            </ul>
+            <a class="st-cta" href="#">Подробнее →</a>
+          </footer>
+        </article>
+
+        <div class="zone zone--end" data-z="5">
+          <div class="end-inner">
+            <span class="end-dot"></span>
+            <div class="end-title">Контекст собран</div>
+            <p class="end-text">Рынок, события, портфель и связи — у решения есть основание.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="access" id="tariffs">
+  <div class="access-wrap">
+    <header class="access-head">
+      <div class="eyebrow e-anim" style="--i: 0;"><span class="tick"></span>05 · Подписка</div>
+      <h2 class="e-anim" style="--i: 1;">Три уровня доступа</h2>
+      <p class="access-sub e-anim" style="--i: 2;">Начните бесплатно. Платите только за то, что реально используете — обновления и отмена в один клик.</p>
+    </header>
+
+    <div class="access-surface">
+
+      <div class="acc-col" style="--i: 0;">
+        <div class="lv"><span>Уровень 01</span><span class="lv-bars"><i class="f"></i><i></i><i></i></span></div>
+        <div class="acc-name">Free</div>
+        <div class="acc-pos">видимость рынка</div>
+        <div class="acc-price">0 ₽</div>
+        <div class="feats">
+          <div class="feats-cap">Включено</div>
+          <details class="fg">
+            <summary><span class="nm">Макро и рынки</span><span class="hint">4 модуля</span></summary>
+            <ul>
+              <li>Макро-обзор: VIX, DXY, ставка ФРС, лента геополитики</li>
+              <li>Ежедневный утренний обзор рынков</li>
+              <li>Risk heatmap по 10+ странам</li>
+              <li>Обзор акций и облигаций: RU + US</li>
+            </ul>
+          </details>
+          <details class="fg">
+            <summary><span class="nm">Крипто</span><span class="hint">3 модуля</span></summary>
+            <ul>
+              <li>Цены, халвинг-циклы, индикатор страха и жадности</li>
+              <li>ETF притоки на BTC, ETH</li>
+              <li>On-chain метрики: BTC, ETH+</li>
+            </ul>
+          </details>
+          <details class="fg">
+            <summary><span class="nm">Ставки и события</span><span class="hint">1 модуль</span></summary>
+            <ul>
+              <li>Ставки 10 Центральных Банков и календарь событий</li>
+            </ul>
+          </details>
+        </div>
+        <div class="locked">
+          <div class="locked-cap">Открывается в Pro</div>
+          <div class="locked-row">Валюты и carry</div>
+          <div class="locked-row">Портфель</div>
+          <div class="locked-row">Товары</div>
+          <div class="locked-row">Календарь и события</div>
+          <div class="locked-row">COT и институционалы</div>
+          <div class="locked-row">Потоки капитала и подходы</div>
+        </div>
+      </div>
+
+      <div class="acc-col acc-col--pro" style="--i: 1;">
+        <span class="pro-line"></span>
+        <span class="acc-tag">Основной доступ</span>
+        <div class="lv"><span>Уровень 02</span><span class="lv-bars"><i class="f"></i><i class="f"></i><i class="g"></i></span></div>
+        <div class="acc-name">Pro</div>
+        <div class="acc-pos">для активного трейдера</div>
+        <div class="acc-price">4 990 ₽ <span class="per">/ мес</span></div>
+        <div class="feats">
+          <div class="all-row"><span class="pip"></span>Всё из Free</div>
+          <details class="fg">
+            <summary><span class="nm">Валюты и carry</span><span class="hint">3 модуля</span></summary>
+            <ul>
+              <li>Carry-скринер: корреляционная матрица валют</li>
+              <li>Оценка валют: PPP, BEER, FEER, MP</li>
+              <li>Фундаментальные индикаторы Центральных Банков по 10+ странам</li>
+            </ul>
+          </details>
+          <details class="fg">
+            <summary><span class="nm">Портфель</span><span class="hint">1 модуль</span></summary>
+            <ul>
+              <li>Загрузка портфеля: Excel / API брокера</li>
+            </ul>
+          </details>
+          <details class="fg">
+            <summary><span class="nm">Товары</span><span class="hint">1 модуль</span></summary>
+            <ul>
+              <li>Обзор товарных рынков: запасы, корреляции, аналитика</li>
+            </ul>
+          </details>
+          <details class="fg">
+            <summary><span class="nm">Календарь и события</span><span class="hint">2 модуля</span></summary>
+            <ul>
+              <li>Экономический календарь</li>
+              <li>Отчётности компаний, инсайдерская активность в акциях</li>
+            </ul>
+          </details>
+          <details class="fg">
+            <summary><span class="nm">COT и институционалы</span><span class="hint">3 модуля</span></summary>
+            <ul>
+              <li>Интерпретация COT-отчётов по товарам и индексам</li>
+              <li>Потоки капитала</li>
+              <li>Мониторинг рецессии</li>
+            </ul>
+          </details>
+          <details class="fg">
+            <summary><span class="nm">Подходы и интермаркет</span><span class="hint">TBD</span></summary>
+            <ul>
+              <li>Макроэкономические подходы по Далио, Соросу и Баффету (TBD)</li>
+              <li>Интермаркет аналитика (TBD)</li>
+            </ul>
+          </details>
+        </div>
+        <a class="acc-cta acc-cta--pro" href="#"><span class="pip"></span>Оплатить Pro</a>
+      </div>
+
+      <div class="acc-col" style="--i: 2;">
+        <div class="lv"><span>Уровень 03</span><span class="lv-bars"><i class="f"></i><i class="f"></i><i class="f"></i></span></div>
+        <div class="acc-name">Подписка с обучением</div>
+        <div class="acc-pos">платформа + системное понимание</div>
+        <div class="acc-price">19 990 ₽</div>
+        <div class="feats">
+          <div class="all-row"><span class="pip"></span>Полный доступ Pro на 3 месяца</div>
+        </div>
+        <div class="course-cap">Курс из 10 уроков</div>
+        <ol class="lessons">
+          <li><span class="n">01</span>Финансовые рынки</li>
+          <li><span class="n">02</span>Фундаментальный анализ</li>
+          <li><span class="n">03</span>Типы активов</li>
+          <li><span class="n">04</span>Оценка компаний по мультипликаторам</li>
+          <li><span class="n">05</span>Анализ долгового бремени и оценка облигаций</li>
+          <li><span class="n">06</span>Портфельная теория</li>
+          <li><span class="n">07</span>Интермаркет анализ</li>
+          <li><span class="n">08</span>Динамическое хеджирование</li>
+          <li><span class="n">09</span>Риск-мани менеджмент</li>
+          <li><span class="n">10</span>Использование платформы IB · BEURS</li>
+        </ol>
+        <a class="acc-cta acc-cta--soft" href="#">Оплатить обучение</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="fit" id="faq">
+  <div class="fit-wrap">
+    <header class="fit-head">
+      <div class="eyebrow e-anim" style="--i: 0;"><span class="tick"></span>06 · Подойдёт ли вам</div>
+      <h2 class="e-anim" style="--i: 1;">FAQ</h2>
+      <p class="fit-sub e-anim" style="--i: 2;">Платформа решает разные задачи для разных пользователей. Посмотрите, что она даст именно вам.</p>
+    </header>
+
+    <div class="fit-grid">
+      <div class="selector">
+        <div class="scen on">
+          <div class="scen-top"><span class="scen-num">01</span><span class="scen-name">Портфельный инвестор</span></div>
+          <div class="scen-q"><p><span>Какую аналитику вы можете дать портфельному инвестору, который пересматривает позиции раз в квартал?</span></p></div>
+        </div>
+        <div class="scen">
+          <div class="scen-top"><span class="scen-num">02</span><span class="scen-name">Крипта</span></div>
+          <div class="scen-q"><p><span>Подойдёт ли платформа для торговли криптой?</span></p></div>
+        </div>
+        <div class="scen">
+          <div class="scen-top"><span class="scen-num">03</span><span class="scen-name">FX</span></div>
+          <div class="scen-q"><p><span>Что внутри для FX-трейдера?</span></p></div>
+        </div>
+        <div class="scen">
+          <div class="scen-top"><span class="scen-num">04</span><span class="scen-name">Новичок</span></div>
+          <div class="scen-q"><p><span>Подойдёт ли новичку, который только начинает торговать?</span></p></div>
+        </div>
+        <div class="scen">
+          <div class="scen-top"><span class="scen-num">05</span><span class="scen-name">Российские акции</span></div>
+          <div class="scen-q"><p><span>Полезно ли для портфеля российских акций?</span></p></div>
+        </div>
+      </div>
+
+      <div class="fit-canvas">
+        <article class="ans on">
+          <h3 class="ans-q">Какую аналитику вы можете дать портфельному инвестору, который пересматривает позиции раз в квартал?</h3>
+          <div class="ans-cue"><span class="cd g"></span><strong>Фаза цикла</strong><span class="arr">→</span><span>аллокация</span><span class="arr">·</span><span>Q1</span><span class="cd"></span><span>Q2</span><span class="cd"></span><span>Q3</span><span class="cd g"></span><span>Q4</span></div>
+          <div class="ans-body">
+            <p>Квартальный ритм — это ритм платформы: положение стран в большом цикле подсказывает, какая категория активов в фокусе ближайших месяцев, а мониторинг рецессии и risk heatmap показывают, когда пора защищаться.</p>
+            <p>Загрузите портфель из Excel или через API брокера — платформа разберёт его на предмет коррелирующих активов, предложит варианты диверсификации по риск-профилю и рассчитает текущую доходность.</p>
+          </div>
+          <div class="ans-keys">
+            <div class="ans-key"><span class="tick"></span><strong>Фаза цикла → категория активов</strong><span>ориентир для квартальной ребалансировки</span></div>
+            <div class="ans-key"><span class="tick"></span><strong>Корреляционный разбор портфеля</strong><span>скрытая концентрация риска видна сразу</span></div>
+            <div class="ans-key"><span class="tick"></span><strong>Календарь квартала</strong><span>отчётности, дивиденды, заседания ЦБ</span></div>
+          </div>
+        </article>
+
+        <article class="ans">
+          <h3 class="ans-q">Подойдёт ли платформа для торговли криптой?</h3>
+          <div class="ans-cue"><span class="cd g"></span><strong>BTC / ETH</strong><span class="arr">↔</span><span>DXY</span><span class="arr">↔</span><span>ставки</span><span class="arr">·</span><span>аппетит к риску</span></div>
+          <div class="ans-body">
+            <p>Да. Внутри — цены и халвинг-циклы, индикатор страха и жадности, ETF-притоки на BTC и ETH, on-chain метрики. Большая часть крипто-модулей открыта уже на уровне Free.</p>
+            <p>Главное отличие от крипто-трекеров — контекст: крипта показана в связке с DXY, ставками и общим аппетитом к риску, потому что именно межрыночная картина чаще всего определяет её большие движения.</p>
+          </div>
+          <div class="ans-keys">
+            <div class="ans-key"><span class="tick"></span><strong>On-chain + ETF-притоки</strong><span>институциональный спрос виден в цифрах</span></div>
+            <div class="ans-key"><span class="tick"></span><strong>Крипта ↔ DXY ↔ ставки</strong><span>межрыночная связка вместо изолированного графика</span></div>
+          </div>
+        </article>
+
+        <article class="ans">
+          <h3 class="ans-q">Что внутри для FX-трейдера?</h3>
+          <div class="ans-cue"><span class="cd g"></span><strong>Спред ставок</strong><span class="arr">→</span><span>кэрри</span><span class="arr">·</span><span>10 ЦБ</span><span class="arr">·</span><span>DXY</span></div>
+          <div class="ans-body">
+            <p>Ядро — carry-скринер: 20+ валютных пар, отсортированных по доходности, с номинальным и реальным спредом, трендом и волатильностью за 30 дней.</p>
+            <p>К нему — оценка валют по PPP, BEER, FEER и MP, фундаментальные индикаторы и ставки 10 Центральных Банков, календарь заседаний и корреляционная матрица валют.</p>
+          </div>
+          <div class="ans-keys">
+            <div class="ans-key"><span class="tick"></span><strong>Carry-скринер</strong><span>положительный, нейтральный или отрицательный кэрри по каждой паре</span></div>
+            <div class="ans-key"><span class="tick"></span><strong>Оценка валют</strong><span>PPP, BEER, FEER, MP — недооценка и переоценка</span></div>
+            <div class="ans-key"><span class="tick"></span><strong>Календарь ЦБ</strong><span>заседания и решения по ставкам в одной ленте</span></div>
+          </div>
+        </article>
+
+        <article class="ans">
+          <h3 class="ans-q">Подойдёт ли новичку, который только начинает торговать?</h3>
+          <div class="ans-cue"><span class="cd g"></span><strong>Утренний обзор</strong><span class="arr">→</span><span>курс из 10 уроков</span><span class="arr">→</span><span>платформа</span></div>
+          <div class="ans-body">
+            <p>Да — и начать можно бесплатно. Утренний обзор рынков читается за минуту и постепенно выстраивает понимание того, на что смотрят опытные участники.</p>
+            <p>Для системного входа есть подписка с обучением: курс из 10 уроков — от устройства финансовых рынков до портфельной теории и риск-менеджмента — заканчивается уроком по использованию самой платформы.</p>
+          </div>
+          <div class="ans-keys">
+            <div class="ans-key"><span class="tick"></span><strong>Старт с Free</strong><span>базовая видимость рынка без оплаты</span></div>
+            <div class="ans-key"><span class="tick"></span><strong>Курс из 10 уроков</strong><span>от основ до самостоятельной работы с платформой</span></div>
+          </div>
+        </article>
+
+        <article class="ans">
+          <h3 class="ans-q">Полезно ли для портфеля российских акций?</h3>
+          <div class="ans-cue"><span class="cd g"></span><strong>Нефть</strong><span class="arr">·</span><span>рубль</span><span class="arr">·</span><span>ставка ЦБ</span><span class="arr">→</span><span>RU-портфель</span></div>
+          <div class="ans-body">
+            <p>Да. Обзор акций и облигаций покрывает RU вместе с US, а макро-фильтр — нефть, рубль, ставка ЦБ — показывает контекст, в котором живёт российский портфель.</p>
+            <p>Календарь отчётностей и дивидендов, risk heatmap по странам и корреляционный разбор портфеля работают для российских бумаг так же, как и для остальных рынков.</p>
+          </div>
+          <div class="ans-keys">
+            <div class="ans-key"><span class="tick"></span><strong>RU-рынок в макро-контексте</strong><span>нефть, рубль и ставка в одной картине</span></div>
+            <div class="ans-key"><span class="tick"></span><strong>Отчётности и дивиденды</strong><span>календарь событий по вашим бумагам</span></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="fin" id="contact">
+      <div class="fin-tick"></div>
+      <p>Получите полный доступ к платформе и соберите рыночный контекст в одном интерфейсе.</p>
+      <div class="fin-actions">
+        <a class="cta" href="#tariffs"><span class="pip"></span>Получить полный доступ</a>
+        <a class="fin-contact" href="mailto:ibb@ib-beurs.com">Связаться с нами</a>
+      </div>
+      <div class="fin-channels"><a href="#">Telegram</a><span>·</span><a href="mailto:ibb@ib-beurs.com">ibb@ib-beurs.com</a></div>
+    </div>
+
+    <footer class="foot">
+      <div class="foot-wrap">
+        <div>
+          <div class="foot-brand">IB <span class="dot">·</span> BEURS</div>
+          <div class="foot-copy">© 2026 IB · BEURS</div>
+        </div>
+        <div class="legal">
+          <p>Информация и аналитика на платформе носят информационный и образовательный характер и не являются индивидуальной инвестиционной рекомендацией. Торговля на финансовых рынках связана с риском потери капитала.</p>
+          <div class="foot-links">
+            <a href="#">Публичная оферта</a>
+            <a href="#">Политика конфиденциальности</a>
+            <a href="#">Согласие на обработку данных</a>
+            <a href="mailto:ibb@ib-beurs.com">ibb@ib-beurs.com</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</section>
+
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

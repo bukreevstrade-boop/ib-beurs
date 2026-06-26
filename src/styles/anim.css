@@ -1,0 +1,67 @@
+/* ============================================================
+   BUG 1 — no flicker.
+   Animated elements are hidden in CSS from first paint, but ONLY when JS is
+   present: an inline <head> script sets html.js synchronously before the body
+   renders, so the element is either hidden-then-animated or (JS off) fully
+   visible — never the "load → flash → hide → animate" sequence.
+   GSAP only reveals these and clears the props.
+   ============================================================ */
+
+html.js .nav,
+html.js .hero-copy h1,
+html.js .hero-copy p,
+html.js .hero-copy .cta,
+html.js .instrument-tilt,
+html.js .hero-foot,
+html.js .e-anim,
+html.js .cap,
+html.js .ans-key,
+html.js .acc-col,
+html.js .scen,
+html.js .fit-canvas,
+html.js .strip-tick,
+html.js .fin > *,
+html.js .anim-hidden { opacity: 0; }
+
+html.js .hero-copy h1,
+html.js .hero-copy p,
+html.js .hero-copy .cta,
+html.js .e-anim,
+html.js .cap,
+html.js .ans-key,
+html.js .acc-col,
+html.js .scen,
+html.js .fit-canvas,
+html.js .fin > *,
+html.js .anim-hidden { transform: translateY(26px); }
+
+html.js .instrument-tilt { transform: translateY(48px); }
+html.js .hero-foot { transform: translateY(16px); }
+
+/* blur-to-focus for editorial headings + the final statement */
+html.js .ctx-head .e-anim,
+html.js .walk-head .e-anim,
+html.js .brief-head .e-anim,
+html.js .access-head .e-anim,
+html.js .fit-head .e-anim,
+html.js .fin p { filter: blur(8px); }
+
+/* SVG / line draws + special transforms */
+html.js .thread { transform: scaleY(0); transform-origin: top center; }
+html.js .noise-layer span { opacity: 0; }
+html.js .pro-line { transform: scaleX(0); transform-origin: left center; }
+
+/* Pro statement words: .12 bleed is the design's resting state; GSAP scrubs to 1 */
+.strip p .w { opacity: .12; transition: none; }
+
+/* JS off / reduced-motion: show everything */
+html:not(.js) .anim-hidden { opacity: 1 !important; }
+@media (prefers-reduced-motion: reduce) {
+  html.js .nav, html.js .hero-copy h1, html.js .hero-copy p, html.js .hero-copy .cta,
+  html.js .instrument-tilt, html.js .hero-foot, html.js .e-anim, html.js .cap,
+  html.js .ans-key, html.js .acc-col, html.js .scen, html.js .fit-canvas,
+  html.js .strip-tick, html.js .fin > *, html.js .anim-hidden, html.js .thread,
+  html.js .noise-layer span, html.js .pro-line, html.js .strip p .w {
+    opacity: 1 !important; transform: none !important; filter: none !important;
+  }
+}
