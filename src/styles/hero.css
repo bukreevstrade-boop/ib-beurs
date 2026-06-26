@@ -223,5 +223,23 @@
   .hero-foot { justify-content: center; }
 }
 @media (max-width: 767px) {
+  /* phone: show the WHOLE compass in flow (not the cropped bottom arc) so it can
+     react to device orientation. Tablet/desktop keep the absolute bottom-rising disc. */
+  .hero {
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 40px;
+  }
   .hero-copy { margin-top: clamp(28px, 6vh, 64px); }
+  .instrument-tilt {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    margin: clamp(22px, 4.5vh, 56px) auto 0;
+    width: min(94vw, 480px);
+    transform-origin: center center;
+  }
 }

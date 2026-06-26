@@ -162,7 +162,7 @@ function buildCot() {
       const t = i / (N - 1);
       const v = Math.round(-52 + 118 * t * t + 14 * Math.sin(t * 25 * 1.7));
       const x = 14 + i * STEP, h = Math.max(4, Math.abs(v));
-      const bar = el('rect', { x, y: v > 0 ? ZERO - h : ZERO, width: BW, height: h, rx: 2 }, svg);
+      const bar = el('rect', { x, y: v > 0 ? ZERO - h : ZERO, width: BW, height: h }, svg);
       if (v > 0) { bar.style.fill = 'var(--accent)'; bar.setAttribute('opacity', 0.85); }
       else bar.setAttribute('fill', 'rgba(255,255,255,.22)');
       if (v > 0 && !flipX) flipX = x + BW / 2;

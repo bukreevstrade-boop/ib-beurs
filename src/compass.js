@@ -165,4 +165,32 @@ export function initCompass() {
       tiltEl.style.transform = 'perspective(1400px) rotateY(0deg) rotateX(0deg)';
     });
   }
+
+  /* phone: the whole instrument tilts/turns with the device's orientation
+     (gyroscope). iOS 13+ needs permission from a user gesture, so enable on the
+     first touch. Tablet/desktop never reach this (mouse hover-tilt above). */
+  if (tiltEl && window.matchMedia('(max-width: 767px)').matches && 'DeviceOrientationEvent' in window) {
+    const clamp = (v, m) => Math.max(-m, Math.min(m, v));
+    const onOrient = (e) => {
+      if (!motionOn() || (e.gamma == null && e.beta == null)) return;
+      const g = e.gamma || 0;          // left-right tilt  [-90..90]
+      const b = (e.beta || 0) - 45;    // front-back, zeroed around a natural hold
+      const ry = clamp(g * 0.6, 24);   // turn left/right
+      const rx = clamp(-b * 0.32, 16); // pitch
+      const rz = clamp(g * 0.2, 9);    // slight in-plane spin
+      tiltEl.style.transform =
+        'perspective(1400px) rotateY(' + ry.toFixed(1) + 'deg) rotateX(' + rx.toFixed(1) + 'deg) rotate(' + rz.toFixed(1) + 'deg)';
+    };
+    const enable = () => {
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+          .then((s) => { if (s === 'granted') window.addEventListener('deviceorientation', onOrient); })
+          .catch(() => {});
+      } else {
+        window.addEventListener('deviceorientation', onOrient);
+      }
+    };
+    window.addEventListener('deviceorientation', onOrient);   // Android: fires immediately
+    window.addEventListener('touchend', enable, { once: true }); // iOS: permission on first tap
+  }
 }
