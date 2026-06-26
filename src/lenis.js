@@ -9,8 +9,8 @@ export function initSmoothScroll() {
   // Respect reduced-motion: fall back to native scroll, ScrollTrigger still works.
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
 
-  // default duration/easing — the standard Lenis feel
-  const lenis = new Lenis();
+  // near-native: tiny smoothing, slightly lower wheel sensitivity
+  const lenis = new Lenis({ lerp: 0.075, smoothWheel: true, wheelMultiplier: 0.8 });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
