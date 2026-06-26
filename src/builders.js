@@ -102,22 +102,25 @@ const spark = (dir) => {
 };
 const sig = { pos: ['sig-pos', 'положительный'], neu: ['sig-neu', 'нейтральный'], neg: ['sig-neg', 'отрицательный'] };
 
+/* Carry screener — columns: pair | spread | 30d trend | 30d change | carry signal.
+   Row tuple: [pair, spread, trendDir, change30d, carrySig]. (The old "real rate"
+   column was dropped; "volatility 30d" is now "change 30d".) */
 function buildCarry() {
   const host = document.getElementById('carry-table');
   if (!host) return;
   const rows = [
-    ['AUD/JPY', '3.2', '3.1', 'flat', '6.4%', 'pos'], ['GBP/JPY', '2.5', '2.4', 'down', '5.0%', 'pos'],
-    ['AUD/CHF', '4.5', '2.4', 'flat', '5.1%', 'pos'], ['NZD/JPY', '1.4', '1.8', 'flat', '7.4%', 'pos'],
-    ['USD/CHF', '3.7', '0.1', 'up', '6.3%', 'neu'], ['EUR/USD', '−1.4', '0.6', 'up', '4.9%', 'neu'],
-    ['USD/CAD', '1.3', '−0.9', 'flat', '3.1%', 'neg'], ['USD/CNY', '2.0', '−1.5', 'flat', '1.9%', 'neg'],
+    ['AUD/JPY', '3.2', 'flat', '6.4%', 'pos'], ['GBP/JPY', '2.5', 'down', '5.0%', 'pos'],
+    ['AUD/CHF', '4.5', 'flat', '5.1%', 'pos'], ['NZD/JPY', '1.4', 'flat', '7.4%', 'pos'],
+    ['USD/CHF', '3.7', 'up', '6.3%', 'neu'], ['EUR/USD', '−1.4', 'up', '4.9%', 'neu'],
+    ['USD/CAD', '1.3', 'flat', '3.1%', 'neg'], ['USD/CNY', '2.0', 'flat', '1.9%', 'neg'],
   ];
   host.innerHTML =
-    '<table class="tbl"><thead><tr><th>Пара</th><th>Спред</th><th>Реальный</th><th>Тренд 30д</th><th>Волат. 30д</th><th>Кэрри</th></tr></thead><tbody>' +
-    rows.map((r) => '<tr><td class="strong">' + r[0] + '</td><td class="num">' + r[1] + '</td><td class="num">' + r[2] + '</td><td>' + spark(r[3]) + '</td><td class="num soft">' + r[4] + '</td><td><span class="sig ' + sig[r[5]][0] + '"></span><span class="sig-word">' + sig[r[5]][1] + '</span></td></tr>').join('') +
+    '<table class="tbl"><thead><tr><th>Пара</th><th>Спред</th><th>Тренд 30д</th><th>Изменение 30д</th><th>Кэрри</th></tr></thead><tbody>' +
+    rows.map((r) => '<tr><td class="strong">' + r[0] + '</td><td class="num">' + r[1] + '</td><td>' + spark(r[2]) + '</td><td class="num soft">' + r[3] + '</td><td><span class="sig ' + sig[r[4]][0] + '"></span><span class="sig-word">' + sig[r[4]][1] + '</span></td></tr>').join('') +
     '</tbody></table>' +
     '<div class="tbl-cards">' + rows.map((r) =>
-      '<div class="tc-row"><div class="tc-top"><span class="tc-name">' + r[0] + '</span><span class="tc-state"><span class="sig ' + sig[r[5]][0] + '"></span>' + sig[r[5]][1] + '</span></div>' +
-      '<div class="tc-facts"><span>Спред<b>' + r[1] + '</b></span><span>Реальный<b>' + r[2] + '</b></span><span>Волат. 30д<b>' + r[4] + '</b></span><span>' + spark(r[3]) + '</span></div></div>').join('') + '</div>';
+      '<div class="tc-row"><div class="tc-top"><span class="tc-name">' + r[0] + '</span><span class="tc-state"><span class="sig ' + sig[r[4]][0] + '"></span>' + sig[r[4]][1] + '</span></div>' +
+      '<div class="tc-facts"><span>Спред<b>' + r[1] + '</b></span><span>Изменение 30д<b>' + r[3] + '</b></span><span>' + spark(r[2]) + '</span></div></div>').join('') + '</div>';
 }
 
 function buildCommodities() {
