@@ -4,3 +4,8 @@ dist
 *.local
 .netlify
 .env
+# secrets / one-off setup helpers (never commit)
+.nltoken
+.ghtoken
+.createsite.json
+.netlify-*.cjs
