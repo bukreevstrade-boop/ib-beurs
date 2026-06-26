@@ -166,31 +166,129 @@ export function initCompass() {
     });
   }
 
-  /* phone: the whole instrument tilts/turns with the device's orientation
-     (gyroscope). iOS 13+ needs permission from a user gesture, so enable on the
-     first touch. Tablet/desktop never reach this (mouse hover-tilt above). */
-  if (tiltEl && window.matchMedia('(max-width: 767px)').matches && 'DeviceOrientationEvent' in window) {
-    const clamp = (v, m) => Math.max(-m, Math.min(m, v));
-    const onOrient = (e) => {
-      if (!motionOn() || (e.gamma == null && e.beta == null)) return;
-      const g = e.gamma || 0;          // left-right tilt  [-90..90]
-      const b = (e.beta || 0) - 45;    // front-back, zeroed around a natural hold
-      const ry = clamp(g * 0.6, 24);   // turn left/right
-      const rx = clamp(-b * 0.32, 16); // pitch
-      const rz = clamp(g * 0.2, 9);    // slight in-plane spin
-      tiltEl.style.transform =
-        'perspective(1400px) rotateY(' + ry.toFixed(1) + 'deg) rotateX(' + rx.toFixed(1) + 'deg) rotate(' + rz.toFixed(1) + 'deg)';
-    };
+  /* phone: swap the cropped arc for a full ROUND compass that reacts to the
+     device's orientation. Built always; CSS reveals it only on phones. The arc
+     (and its mouse hover-tilt) stays for tablet/desktop. */
+  setupMobileCompass(document.querySelector('.instrument-tilt'));
+}
+
+/* ---- full round compass (phones) ---- */
+function buildRoundCompass(host) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('id', 'instrument-round');
+  svg.setAttribute('viewBox', '0 0 600 600');
+  svg.setAttribute('aria-hidden', 'true');
+  const el = (tag, attrs, par) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); (par || svg).appendChild(n); return n; };
+  const CX = 300, CY = 300;
+  const rad = (d) => (d - 90) * Math.PI / 180;     // 0° at the top, clockwise
+  const px = (d, r) => CX + r * Math.cos(rad(d));
+  const py = (d, r) => CY + r * Math.sin(rad(d));
+
+  const defs = el('defs', {});
+  const dg = el('radialGradient', { id: 'rDisc', cx: '0.5', cy: '0.34', r: '0.9' }, defs);
+  el('stop', { offset: '0', 'stop-color': '#303436' }, dg);
+  el('stop', { offset: '0.6', 'stop-color': '#1f2224' }, dg);
+  el('stop', { offset: '1', 'stop-color': '#141617' }, dg);
+  const glow = el('filter', { id: 'rGlow', x: '-200%', y: '-200%', width: '500%', height: '500%' }, defs);
+  el('feGaussianBlur', { stdDeviation: '13' }, glow);
+
+  el('circle', { cx: CX, cy: CY, r: 270, fill: '#0b0d0d', opacity: 0.2, filter: 'url(#rGlow)' });
+  el('circle', { cx: CX, cy: CY, r: 258, fill: 'url(#rDisc)' });
+  el('circle', { cx: CX, cy: CY, r: 258, fill: 'none', stroke: '#ffffff', opacity: 0.1, 'stroke-width': 1.5 });
+  el('circle', { cx: CX, cy: CY, r: 226, fill: 'none', stroke: '#ffffff', opacity: 0.05, 'stroke-width': 1 });
+
+  for (let a = 0; a < 360; a += 6) {                // full 360° tick ring
+    const major = a % 30 === 0;
+    el('line', { x1: px(a, major ? 234 : 243), y1: py(a, major ? 234 : 243), x2: px(a, 250), y2: py(a, 250),
+                 stroke: '#ffffff', 'stroke-width': major ? 1.4 : 1, opacity: major ? 0.42 : 0.14 });
+  }
+  for (let a = 0; a < 360; a += 30) {               // degree labels
+    if (a === 0) continue;
+    el('text', { x: px(a, 208), y: py(a, 208) + 4, 'text-anchor': 'middle', fill: '#ffffff', opacity: 0.34, 'font-size': 13, class: 'num' }).textContent = String(a).padStart(3, '0');
+  }
+  el('text', { x: CX, y: 92, 'text-anchor': 'middle', 'font-size': 16, 'font-weight': 600, class: 'lbl', style: 'fill: var(--accent)' }).textContent = 'N';
+
+  [['GOLD', 24], ['US10Y', 78], ['SPX', 140], ['BRENT', 214], ['DXY', 312]].forEach((m) => {   // market labels
+    el('circle', { cx: px(m[1], 178), cy: py(m[1], 178), r: 2, fill: '#ffffff', opacity: 0.3 });
+    el('text', { x: px(m[1], 158), y: py(m[1], 158) + 4, 'text-anchor': 'middle', 'font-size': 12, class: 'lbl', opacity: 0.5, fill: '#ffffff' }).textContent = m[0];
+  });
+
+  const pts = [];                                   // inner intermarket signal loop
+  for (let a = 0; a <= 360; a += 10) {
+    const i = a / 10;
+    const r = 96 + 13 * Math.sin(i * 0.6) + 7 * Math.sin(i * 1.3 + 2);
+    pts.push(px(a, r).toFixed(1) + ',' + py(a, r).toFixed(1));
+  }
+  el('polyline', { points: pts.join(' '), fill: 'none', 'stroke-width': 1.4, opacity: 0.4, 'stroke-linejoin': 'round', style: 'stroke: var(--accent)' });
+
+  const needle = el('g', { id: 'round-needle' });   // needle — rotates with the device
+  el('line', { x1: CX, y1: CY, x2: px(0, 206), y2: py(0, 206), 'stroke-width': 2, style: 'stroke: var(--accent)' }, needle);
+  el('circle', { cx: px(0, 206), cy: py(0, 206), r: 26, filter: 'url(#rGlow)', class: 'breathe', style: 'fill: var(--accent)' }, needle);
+  el('circle', { cx: px(0, 206), cy: py(0, 206), r: 4, style: 'fill: var(--accent)' }, needle);
+  el('line', { x1: CX, y1: CY, x2: px(180, 66), y2: py(180, 66), 'stroke-width': 1.5, stroke: '#e9eae8', opacity: 0.4 }, needle);
+
+  el('circle', { cx: CX, cy: CY, r: 7, fill: '#1e2123', stroke: '#ffffff', 'stroke-opacity': 0.2, 'stroke-width': 1 });
+  el('circle', { cx: CX, cy: CY, r: 3, style: 'fill: var(--accent)' });
+
+  host.appendChild(svg);
+  return needle;
+}
+
+function setupMobileCompass(host) {
+  if (!host || document.getElementById('instrument-round')) return;
+  const needle = buildRoundCompass(host);
+  const hint = document.createElement('div');
+  hint.className = 'compass-hint';
+  hint.textContent = 'Наклоните телефон';
+  host.appendChild(hint);
+
+  // the SVG is built on every size (CSS reveals it on phones); orientation +
+  // idle drift only run on phones so a desktop motion sensor can't tilt the arc.
+  if (!window.matchMedia('(max-width: 767px)').matches) return;
+
+  const clamp = (v, m) => Math.max(-m, Math.min(m, v));
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let oriented = false, visible = true;
+  const heroEl = document.querySelector('.hero');
+  if (heroEl && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 }).observe(heroEl);
+  }
+
+  // gentle idle drift until the gyro takes over
+  const t0 = performance.now();
+  (function idle(now) {
+    if (!oriented && visible && !reduced.matches) {
+      const t = (now - t0) / 1000;
+      const d = 6 * Math.sin(t * 0.24) + 3 * Math.sin(t * 0.07 + 1.5);
+      needle.setAttribute('transform', 'rotate(' + d.toFixed(2) + ' 300 300)');
+    }
+    requestAnimationFrame(idle);
+  })(t0);
+
+  const onOrient = (e) => {
+    let heading = null;
+    if (typeof e.webkitCompassHeading === 'number' && !isNaN(e.webkitCompassHeading)) heading = e.webkitCompassHeading;
+    else if (typeof e.alpha === 'number' && e.alpha != null) heading = 360 - e.alpha;
+    const g = e.gamma || 0, b = e.beta || 0;
+    const rot = (heading != null) ? -heading : g * 1.4;     // point to north, or swing with tilt
+    needle.setAttribute('transform', 'rotate(' + rot.toFixed(1) + ' 300 300)');
+    host.style.transform = 'perspective(1400px) rotateY(' + clamp(g * 0.5, 20).toFixed(1) + 'deg) rotateX(' + clamp(-(b - 45) * 0.3, 14).toFixed(1) + 'deg)';
+    if (!oriented) { oriented = true; host.classList.add('oriented'); }
+  };
+
+  const listen = () => {
+    window.addEventListener('deviceorientation', onOrient);
+    window.addEventListener('deviceorientationabsolute', onOrient);
+  };
+  const needsPerm = typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function';
+  if (!needsPerm) {
+    if ('DeviceOrientationEvent' in window) listen();          // Android / desktop sensors
+  } else {
     const enable = () => {
-      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-          .then((s) => { if (s === 'granted') window.addEventListener('deviceorientation', onOrient); })
-          .catch(() => {});
-      } else {
-        window.addEventListener('deviceorientation', onOrient);
-      }
+      DeviceOrientationEvent.requestPermission().then((s) => { if (s === 'granted') listen(); }).catch(() => {});
     };
-    window.addEventListener('deviceorientation', onOrient);   // Android: fires immediately
-    window.addEventListener('touchend', enable, { once: true }); // iOS: permission on first tap
+    window.addEventListener('touchend', enable, { once: true });  // iOS: permission on first tap
+    window.addEventListener('click', enable, { once: true });
   }
 }

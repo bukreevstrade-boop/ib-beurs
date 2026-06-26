@@ -141,6 +141,23 @@
   will-change: transform;
 }
 #instrument { display: block; width: 100%; height: auto; }
+/* round compass (phones only) — hidden on tablet/desktop */
+#instrument-round { display: none; width: 100%; height: auto; }
+.compass-hint {
+  display: none;
+  position: absolute;
+  left: 50%; bottom: -26px;
+  transform: translateX(-50%);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: .75;
+  transition: opacity .6s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.instrument-tilt.oriented .compass-hint { opacity: 0; }
 #instrument text.lbl {
   font-family: "Inter", sans-serif;
   letter-spacing: 0.16em;
@@ -234,12 +251,15 @@
     padding-bottom: 40px;
   }
   .hero-copy { margin-top: clamp(28px, 6vh, 64px); }
+  #instrument { display: none; }            /* hide the cropped arc */
+  #instrument-round { display: block; }      /* show the full round compass */
+  .compass-hint { display: block; }
   .instrument-tilt {
     position: relative;
     left: auto;
     bottom: auto;
-    margin: clamp(22px, 4.5vh, 56px) auto 0;
-    width: min(94vw, 480px);
+    margin: clamp(26px, 5vh, 60px) auto 0;
+    width: min(82vw, 360px);                 /* square round compass */
     transform-origin: center center;
   }
 }
