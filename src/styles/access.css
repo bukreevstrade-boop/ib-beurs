@@ -78,7 +78,7 @@
 .acc-price .per { font-size: 15px; font-weight: 400; color: var(--ink-soft); letter-spacing: 0; }
 
 /* ---- feature groups: progressive disclosure ---- */
-.feats { margin-top: 30px; }
+.feats { margin-top: 30px; margin-bottom: 44px; }   /* breathing room before the CTA */
 .feats-cap {
   font-size: 10.5px;
   letter-spacing: .18em;
@@ -219,8 +219,8 @@
   font-weight: 500;
   transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
 }
-.acc-col--pro .feats { margin-bottom: 32px; }
-.lessons { margin-bottom: 32px; }
+.acc-col--pro .feats { margin-bottom: 44px; }
+.lessons { margin-bottom: 44px; }
 .acc-cta--pro {
   background: var(--ink);
   color: #f5f5f2;
@@ -252,7 +252,7 @@
 }
 .lessons {
   list-style: none;
-  margin: 14px 0 0;
+  margin: 14px 0 44px;   /* 44px bottom → breathing room before the "Оплатить" CTA */
   padding: 0;
   position: relative;
 }
