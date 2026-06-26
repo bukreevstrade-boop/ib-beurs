@@ -72,7 +72,9 @@
 .hero-copy h1 {
   font-family: "Inter Tight", "Inter", sans-serif;
   font-weight: 600;
-  font-size: clamp(28px, 5.5vw, 82px);   /* 28px floor → 82px ceiling, fluid */
+  /* fluid by width AND height — min(vw,vh) so it shrinks on short/wide windows
+     instead of overflowing the hero and crowding the compass */
+  font-size: clamp(28px, min(5.5vw, 8.6vh), 82px);
   line-height: 1.04;
   letter-spacing: -0.035em;
   text-wrap: balance;

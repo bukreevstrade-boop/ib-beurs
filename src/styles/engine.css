@@ -108,8 +108,8 @@
   /* ---- context panel (the one dark analytical insert) ---- */
   .ctx-panel {
     position: absolute;
-    left: 980px; top: 70px;
-    width: 460px; height: 420px;
+    left: 980px; top: 93px;
+    width: 460px; height: 374px;   /* hugs the content; vertical centre stays at y=280 (= the out-line) */
     padding: 30px 34px;
     box-sizing: border-box;
     background: radial-gradient(120% 100% at 50% 0%, #2b2f31, #17191b);
@@ -120,19 +120,20 @@
     transition: transform .6s cubic-bezier(.2,.65,.25,1);
   }
   .ctx-panel:hover { transform: translateY(-5px); }
-  /* signal entry node — sits on the panel's left edge (where the out-line arrives)
-     and glows softly, rendered on top of the panel so it isn't clipped */
+  /* signal entry node — sits just INSIDE the panel (where the out-line arrives at
+     y=280) so its glow is fully on the dark background and reads as a smooth halo,
+     instead of being half over the light canvas and looking cut at the edge */
   .ctx-panel::before {
     content: "";
     position: absolute;
-    left: 0; top: 50%;
+    left: 10px; top: 50%;
     transform: translate(-50%, -50%);
     width: 8px; height: 8px;
     border-radius: 50%;
     background: var(--accent);
     box-shadow:
-      0 0 4px 1px color-mix(in oklab, var(--accent) 90%, transparent),
-      0 0 16px 4px color-mix(in oklab, var(--accent) 55%, transparent);
+      0 0 5px 1px color-mix(in oklab, var(--accent) 90%, transparent),
+      0 0 18px 5px color-mix(in oklab, var(--accent) 55%, transparent);
   }
   .cp-head {
     display: flex;
