@@ -120,6 +120,20 @@
     transition: transform .6s cubic-bezier(.2,.65,.25,1);
   }
   .ctx-panel:hover { transform: translateY(-5px); }
+  /* signal entry node — sits on the panel's left edge (where the out-line arrives)
+     and glows softly, rendered on top of the panel so it isn't clipped */
+  .ctx-panel::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow:
+      0 0 4px 1px color-mix(in oklab, var(--accent) 90%, transparent),
+      0 0 16px 4px color-mix(in oklab, var(--accent) 55%, transparent);
+  }
   .cp-head {
     display: flex;
     align-items: center;

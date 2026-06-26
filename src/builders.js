@@ -34,8 +34,9 @@ function buildEngine() {
   out.setAttribute('stroke-dasharray', OL);
   out.setAttribute('stroke-dashoffset', OL);
 
-  const port = el('circle', { cx: 982, cy: 280, r: 3.5 });
-  port.style.fill = 'var(--accent)';
+  // (the entry node where the signal meets the panel is drawn by .ctx-panel::before
+  //  so it renders ON TOP of the dark panel with a soft glow, instead of being
+  //  half-clipped by the panel edge here in the SVG)
 
   const dot = el('circle', { r: 2.6, class: 'out-dot', opacity: 0 });
   dot.style.fill = 'var(--accent)';
