@@ -193,10 +193,12 @@
   background: none;
   box-shadow: none;
   filter: none;
-  align-items: flex-start;
+  align-items: center;       /* centre the resolution so "Контекст собран" lands mid-screen */
   justify-content: center;
+  text-align: center;
   padding-top: 60px;
 }
+.zone--end .end-text { margin-left: auto; margin-right: auto; }
 .zone--end.on { opacity: 1; }
 .end-dot {
   display: block;

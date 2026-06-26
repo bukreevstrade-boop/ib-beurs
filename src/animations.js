@@ -139,9 +139,12 @@ function ribbon() {
     let centers = [], geom = [], trackLeft = 0, trackW = 0, maxX = 0, vw = 0;
     const measure = () => {
       vw = sticky.clientWidth;
-      maxX = Math.max(0, ribbonEl.scrollWidth - vw) * 1.5;
       geom = zones.map((z) => ({ left: z.offsetLeft, width: z.offsetWidth }));
       centers = geom.map((g) => g.left + g.width / 2);
+      // End the pan with the LAST zone ("Контекст собран") centred in the
+      // viewport — not over-travelled past it. (Was `(scrollWidth - vw) * 1.5`,
+      // which shoved the final zone way off to the left.)
+      maxX = Math.max(0, centers[centers.length - 1] - vw / 2);
       trackLeft = centers[0];
       trackW = centers[centers.length - 1] - centers[0];
       track.style.left = trackLeft + 'px';

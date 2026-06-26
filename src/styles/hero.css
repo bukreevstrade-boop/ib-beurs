@@ -121,11 +121,16 @@
   position: absolute;
   left: 50%;
   bottom: -6px;
-  translate: -50% 0;
+  /* Centre with a negative margin, NOT `translate: -50%`: GSAP writes
+     `translate: none` on this element when it animates the reveal, which would
+     wipe out a translate-based centre and shove the disc off to the right.
+     margin-left is immune to GSAP and to the hover-tilt transform. */
   width: min(1400px, 124vw, 180vh);
+  margin-left: calc(min(1400px, 124vw, 180vh) * -0.5);
   z-index: 1;
   transform: perspective(1400px) rotateY(0deg) rotateX(0deg);
   transition: transform .7s cubic-bezier(.2,.65,.25,1);
+  will-change: transform;
 }
 #instrument { display: block; width: 100%; height: auto; }
 #instrument text.lbl {
