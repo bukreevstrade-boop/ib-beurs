@@ -120,20 +120,27 @@
     transition: transform .6s cubic-bezier(.2,.65,.25,1);
   }
   .ctx-panel:hover { transform: translateY(-5px); }
-  /* signal entry node — sits just INSIDE the panel (where the out-line arrives at
-     y=280) so its glow is fully on the dark background and reads as a smooth halo,
-     instead of being half over the light canvas and looking cut at the edge */
+  /* signal entry node — a small node sits a little INSIDE the panel with a tight
+     glow that stays fully on the dark background (no halo spilling onto the light
+     canvas), and ::after is a short connector so the out-line plugs straight in. */
   .ctx-panel::before {
     content: "";
     position: absolute;
-    left: 10px; top: 50%;
+    left: 14px; top: 50%;
     transform: translate(-50%, -50%);
-    width: 8px; height: 8px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow:
-      0 0 5px 1px color-mix(in oklab, var(--accent) 90%, transparent),
-      0 0 18px 5px color-mix(in oklab, var(--accent) 55%, transparent);
+    box-shadow: 0 0 6px 1px color-mix(in oklab, var(--accent) 65%, transparent);
+  }
+  .ctx-panel::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 1.6px;
+    background: var(--accent);
+    opacity: .85;
   }
   .cp-head {
     display: flex;
